@@ -10,10 +10,31 @@ import {
 } from "./styles";
 import { useForm } from "react-hook-form";
 
-export function Home() {
-  const { register, handleSubmit, watch } = useForm();
+import * as zod from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-  function handleCreateNewCycle(data: any) {}
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "Informe a tarefa"),
+  minutesAmount: zod
+    .number()
+    .min(5, "O ciclo precisa ser no mínimo 5 minutos.")
+    .max(60, "O ciclo não pode ser maior que 60 minutos."),
+});
+
+type NewCyclieFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
+export function Home() {
+  const { register, handleSubmit, watch } = useForm<NewCyclieFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  function handleCreateNewCycle(data: any) {
+    console.log(data);
+  }
 
   const task = watch("task");
   const isSubmitDisabled = !task;
