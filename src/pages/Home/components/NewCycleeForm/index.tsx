@@ -25,7 +25,7 @@ export function NewCycleForm() {
 
       <label htmlFor="">durante</label>
       <MinutesInput
-        min={0.5}
+        min={5}
         max={60}
         step={5}
         type="number"
